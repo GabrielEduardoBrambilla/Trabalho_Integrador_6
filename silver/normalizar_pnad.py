@@ -21,9 +21,17 @@ def _build_col_map(header: dict) -> dict[str, str]:
 
     SIDRA uses MC/MN for unit-of-measure and D1C…DnC for the actual
     dimensions. The dimension order varies per table, so we read the
-    descriptions in row 0 to identify UF, period, and sex columns.
+    descriptions in row 0 to identify UF, region, period, sex,
+    education-level (nivel de instrucao — table 7322/c1568), and the
+    "Variavel" dimension (D3 in 4093/5436/7322 — distinguishes indicators
+    such as absolute counts, rates, and coeficientes de variacao that
+    SIDRA returns mixed under a single "V"/valor column).
     """
-    rename: dict[str, str] = {"V": "valor_str"}
+    rename: dict[str, str] = {
+        "V": "valor_str",
+        "MC": "unidade_medida_cod",
+        "MN": "unidade_medida",
+    }
     for key, desc in header.items():
         if not key.startswith("D"):
             continue
@@ -37,6 +45,10 @@ def _build_col_map(header: dict) -> dict[str, str]:
             rename[key] = "periodo"
         elif "sexo" in d:
             rename[key] = "sexo_cod" if is_cod else "sexo_nome"
+        elif "instrucao" in d:
+            rename[key] = "nivel_instrucao_cod" if is_cod else "nivel_instrucao"
+        elif "variavel" in d:
+            rename[key] = "variavel_cod" if is_cod else "variavel_nome"
     return rename
 
 
@@ -77,6 +89,9 @@ class PnadNormalizer(BaseNormalizer):
 
         keep = [c for c in [
             "tabela_id", "uf_cod", "uf_nome", "regiao_cod", "regiao_nome",
-            "periodo", "sexo_cod", "sexo", "valor",
+            "periodo", "sexo_cod", "sexo",
+            "nivel_instrucao_cod", "nivel_instrucao",
+            "variavel_cod", "variavel_nome",
+            "unidade_medida_cod", "unidade_medida", "valor",
         ] if c in df.columns]
         return df[keep]

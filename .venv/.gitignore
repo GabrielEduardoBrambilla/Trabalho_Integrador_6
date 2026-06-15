@@ -1,24 +1,2 @@
-# Ambiente virtual
-.venv/
-venv/
-
-# Cache Python
-__pycache__/
-*.pyc
-*.pyo
-
-# Variáveis de ambiente
-.env
-
-# Jupyter
-.ipynb_checkpoints/
-
-# VS Code
-.vscode/
-
-# Sistema
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*

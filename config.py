@@ -10,7 +10,7 @@ load_dotenv()
 
 @dataclass(frozen=True)
 class Config:
-    gcp_project_id: str
+    gcp_project_id: str | None
     pnad_uf_codes: str
     pnad_uf_siglas: list[str]
     ano_inicio: int
@@ -25,9 +25,8 @@ class Config:
 
     @classmethod
     def from_env(cls) -> "Config":
+        # Opcional — usado apenas pelos coletores CAGED/RAIS via BigQuery (nao usados no PM3 PNAD)
         gcp = os.environ.get("GCP_PROJECT_ID")
-        if not gcp:
-            raise EnvironmentError("GCP_PROJECT_ID nao definido no .env")
 
         raw_caged = os.getenv("CAGED_ANO_TESTE")
         raw_rais = os.getenv("RAIS_ANO_TESTE")
