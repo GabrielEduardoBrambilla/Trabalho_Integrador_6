@@ -41,6 +41,7 @@ Cada `tabela_id` traz dezenas de `variavel_nome` diferentes empilhadas na mesma 
 **Como os dados poderiam apoiar decisões:** políticas públicas de equidade salarial podem ser direcionadas com base no tamanho real do gap por UF, por exemplo, priorizando programas de qualificação ou fiscalização em estados onde o gap não está convergindo. Sindicatos podem usar a evolução trimestral do rendimento para embasar negociações coletivas.
 
 **Padrões que poderiam ser descobertos:**
+
 - Correlação forte (0,86) entre pessoas ocupadas e taxa de informalidade (seção 8) — sugere que a recuperação do emprego pós-pandemia veio acompanhada de mais informalidade.
 - O gap salarial (30%–39%) é persistente e não explicado por escolaridade — mulheres têm mais "Superior completo" que homens, mas rendimento menor.
 - Lacunas de divulgação do IBGE (Problema 9) coincidem temporalmente entre tabelas diferentes (4093 e 5436), reforçando a hipótese de undercoverage real durante a pandemia, não falha de coleta.
@@ -49,7 +50,7 @@ Cada `tabela_id` traz dezenas de `variavel_nome` diferentes empilhadas na mesma 
 
 **Uso em dashboards:** sim — o dataset principal (`pnad_treated_data.csv`, seção 18) já está no formato long/tidy, com "uma linha por dimensão × período × indicador", ideal para ferramentas de BI (Power BI, Tableau, Looker Studio) fazerem `groupby`/pivot por UF, sexo, ano e indicador. O dataset de contexto (`pnad_context_data.csv`) não compartilha UF/trimestre com o principal, então não entra no mesmo cubo — é consumido separadamente, como uma tabela de apoio qualitativo.
 
-**Classificação, agrupamento, previsão ou descoberta de padrões:** todos aplicáveis. *Classificação*: categorizar trimestres/UFs em `faixa_rendimento` (seção 16, já feito via discretização, só no dataset principal). *Agrupamento*: clusterizar UF/trimestre por perfil multivariado (ocupação, informalidade, rendimento — usando `valor_normalizado` da seção 15, que já coloca os indicadores na mesma escala). *Previsão*: séries temporais de rendimento/ocupação por UF/sexo. *Descoberta de padrões*: a relação entre nível de instrução e rendimento por sexo (seção 8) já é um exemplo de padrão descoberto na EDA, usando o dataset de contexto para complementar o principal.
+**Classificação, agrupamento, previsão ou descoberta de padrões:** todos aplicáveis. _Classificação_: categorizar trimestres/UFs em `faixa_rendimento` (seção 16, já feito via discretização, só no dataset principal). _Agrupamento_: clusterizar UF/trimestre por perfil multivariado (ocupação, informalidade, rendimento — usando `valor_normalizado` da seção 15, que já coloca os indicadores na mesma escala). _Previsão_: séries temporais de rendimento/ocupação por UF/sexo. _Descoberta de padrões_: a relação entre nível de instrução e rendimento por sexo (seção 8) já é um exemplo de padrão descoberto na EDA, usando o dataset de contexto para complementar o principal.
 
 ## 7. Diagnóstico da qualidade dos dados
 
@@ -131,7 +132,7 @@ A lacuna temporal 2020T2–2022T1 (Problema 9) foi confirmada visualmente nos gr
 
 ## 10. Limpeza dos dados
 
-**`periodo` (`AAAASS`/`AAAA`) → `ano` + `trimestre`:** nas tabelas 4093/5436, `periodo` vem no formato `AAAASS` (ex.: `202001` = 2020, T1); na tabela 7322, `periodo` é só o ano (`2021`..`2024`) — não tem trimestre (indicador anual). A partir daí derivou-se `ano` (int), `trimestre` (Int64 nullable) e `periodo_label`, legível no formato `"2023-T3"` (trimestral) ou `"2021"` (anual).
+**`periodo` (`AAAASS`/`AAAA`) → `ano` + `trimestre`:** nas tabelas 4093/5436, `periodo` vem no formato `AAAASS` (ex.: `202001` = 2020, T1); na tabela 7322, `periodo` é só o ano (`2021`..`2024`) — não tem trimestre (indicador anua l). A partir daí derivou-se `ano` (int), `trimestre` (Int64 nullable) e `periodo_label`, legível no formato `"2023-T3"` (trimestral) ou `"2021"` (anual).
 
 **Duplicidades:** 0 duplicatas encontradas (`df.duplicated()` e checagem pela chave de granularidade).
 
@@ -234,7 +235,7 @@ O processo de tratamento transformou uma base bruta de 5.920 linhas × 15 coluna
 ## 23. Próximos passos
 
 - Coletar dados de 2026 em diante para manter o dataset atualizado em um pipeline incremental.
-- **Resolver o descompasso de granularidade da tabela 7322 via microdados da PNAD Contínua** (fora da API SIDRA): o limite a N2/Região e o corte de 10+ anos são restrições do agregado *publicado*, não da pesquisa original — processar o microdado bruto permitiria recalcular nível de instrução × sexo por UF e para 14+ anos, tornando a tabela finalmente comparável a 4093/5436. É um esforço consideravelmente maior (arquivos trimestrais grandes, dicionário de variáveis, pesos amostrais) e foi deixado fora do escopo deste PM3, que se restringiu à coleta via API SIDRA.
+- **Resolver o descompasso de granularidade da tabela 7322 via microdados da PNAD Contínua** (fora da API SIDRA): o limite a N2/Região e o corte de 10+ anos são restrições do agregado _publicado_, não da pesquisa original — processar o microdado bruto permitiria recalcular nível de instrução × sexo por UF e para 14+ anos, tornando a tabela finalmente comparável a 4093/5436. É um esforço consideravelmente maior (arquivos trimestrais grandes, dicionário de variáveis, pesos amostrais) e foi deixado fora do escopo deste PM3, que se restringiu à coleta via API SIDRA.
 - Construir um dashboard de BI (Power BI/Looker Studio) consumindo diretamente `dados/gold/pnad_treated_data.csv`, com filtros por UF, sexo, período e indicador; `pnad_context_data.csv` como tabela de apoio qualitativo, sem join direto.
 - Explorar modelos de previsão (séries temporais) para `gap_salarial_pct` e `valor_imputado` por UF, e clustering de UF/trimestre usando `valor_normalizado` dos diferentes indicadores.
 - Padronizar um identificador comum entre os dois datasets finais (ex.: `sexo` + `ano`) para permitir, no futuro, ao menos um join parcial entre `pnad_treated_data.csv` e `pnad_context_data.csv` por sexo/ano, sem UF/trimestre.

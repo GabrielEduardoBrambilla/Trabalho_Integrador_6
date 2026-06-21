@@ -147,6 +147,10 @@ with tab_mercado:
         title="Distribuição do rendimento por UF e sexo",
         labels={"uf_nome": "UF", "valor": "Rendimento (R$)", "sexo": "Sexo"},
     )
+    fig.add_hline(
+        y=df_box["valor"].median(), line_dash="dash", line_color="red",
+        annotation_text="Mediana geral", annotation_position="top left",
+    )
     st.plotly_chart(style(fig, height=340), width="stretch")
 
 # --------------------------------------------------------------------------- #
