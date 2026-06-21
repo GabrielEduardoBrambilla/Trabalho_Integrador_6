@@ -25,8 +25,8 @@ mensal_3/
 │   ├── bronze/                # JSON bruto da API SIDRA (preservado, versionado)
 │   ├── silver/                # pnad_limpo.csv (normalizado)
 │   └── gold/                  # pnad_treated_data.csv (principal) + pnad_context_data.csv (contexto)
-├── dashboard/                  # Dashboard Streamlit (extensão de BI, não obrigatória no PM3)
-│   ├── app.py                  # Capa + pages/ — investigação narrativa do gap salarial
+├── dashboard/                  # Dashboard Streamlit single-page (extensão de BI, não obrigatória no PM3)
+│   ├── app.py                  # Filtros + KPIs + 3 abas (Mercado de Trabalho/Investigação/Escolaridade)
 │   └── docs/                   # storytelling.md + analise_graficos.md
 ├── docs/
 │   ├── plano_pm3.md                    # Checklist original do PM3 (context.md 6.1-6.17)
