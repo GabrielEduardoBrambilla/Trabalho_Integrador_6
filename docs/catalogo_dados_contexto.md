@@ -1,0 +1,41 @@
+# Catálogo de dados — `dados/gold/pnad_context_data.csv` (contexto)
+
+Dataset final de **contexto** do PM3 — escolaridade por sexo — gerado por
+`notebooks/03_tratamento_pm3.ipynb` (seção 16) a partir do silver
+`dados/silver/pnad_limpo.csv`. **64 linhas × 13 colunas**. Cada linha representa
+a população da Região Sul por sexo e nível de instrução (tabela SIDRA 7322), para
+um ano (2021–2024). Usado apenas para testar a hipótese de que o gap salarial
+(`dados/gold/pnad_treated_data.csv`) seria explicado por escolaridade — não é
+joinável ao dataset principal por UF ou trimestre (ver seção 22 do relatório
+final).
+
+| Coluna | Descrição | Tipo | Exemplo | Origem | Tratamento aplicado | Uso esperado |
+|---|---|---|---|---|---|---|
+| `tabela_id` | Identificador da tabela SIDRA de origem (sempre 7322 neste arquivo) | int | `7322` | Original | Mantida sem alteração | Dimensão (filtro) |
+| `regiao_nome` | Grande Região (nível N2 — único nível disponível para esta tabela no SIDRA) | texto | `Sul` | Original | — | Dimensão |
+| `sexo` | Sexo (Masculino/Feminino) | texto | `Masculino` | Original (`sexo_cod` descartado) | — | Dimensão |
+| `nivel_instrucao` | Nível de instrução | texto | `Total` | Original | — | Dimensão |
+| `variavel_nome` | Nome do indicador SIDRA (único indicador desta tabela em `VARIAVEIS_FOCO`) | texto | `Pessoas de 10 anos ou mais de idade` | Original | Filtrado (era 1 de 4 variáveis disponíveis na tabela 7322) | Dimensão (filtro) |
+| `unidade_medida` | Unidade de medida do `valor` | texto | `Mil pessoas` | Original | — | Contexto da medida |
+| `valor` | Valor numérico bruto do indicador, conforme divulgado pelo IBGE | float | `13001.0` | Original | Códigos de ausência IBGE (`-`) convertidos para `NaN` | Medida (com lacunas documentadas) |
+| `ano` | Ano do período de referência (indicador anual, sem trimestre) | int | `2021` | Derivada de `periodo` (seção 8.1) | `periodo` (já é só o ano para esta tabela) | Dimensão temporal |
+| `periodo_label` | Rótulo legível do período | texto/int | `2021` | Derivada de `ano` (seção 8.2) | Igual a `ano` (tabela anual, sem trimestre) | Eixo de gráficos temporais |
+| `valor_imputado` | `valor` com lacunas preenchidas pela média do grupo (sexo, indicador) | float | `13001.0` | Derivada (seção 9) | Imputação por média de grupo (`sexo`, `variavel_nome`) | Medida (sem `NaN`), base para normalização/outliers |
+| `is_outlier` | Indica se `valor_imputado` é outlier (IQR 1.5×) dentro de `(tabela_id, variavel_nome)` | bool | `True` | Derivada (seção 10) | Regra IQR 1.5× por grupo | Filtro/flag analítico |
+| `indicador_tabela` | Rótulo descritivo da tabela de origem | texto | `Rendimento por nível de instrução` | Derivada de `tabela_id` (seção 11) | Mapeamento `TABELA_LABELS` | Dimensão (legibilidade) |
+| `valor_normalizado` | `valor_imputado` normalizado para `[0, 1]` (Min-Max) dentro de `(tabela_id, variavel_nome)` | float | `0.943949` | Derivada (seção 13) | `MinMaxScaler` por grupo | Medida comparável entre indicadores |
+
+## Observações gerais
+
+- **Por que não tem `uf_nome`/`trimestre`/`faixa_rendimento`/`gap_salarial_pct`:**
+  esta tabela só existe no SIDRA no nível N2/Região (não N3/UF) e com
+  periodicidade anual — essas colunas nunca se aplicariam, então foram removidas
+  na consolidação (seção 16 do notebook). Ver `dados/gold/pnad_treated_data.csv`
+  (`docs/catalogo_dados.md`) para o dataset principal, que tem essas colunas.
+- **Recorte etário:** este indicador cobre pessoas de 10+ anos, diferente das
+  tabelas do dataset principal (14+ anos) — não comparar totais populacionais
+  diretamente entre os dois arquivos (Problema 7 do relatório final).
+- **Categoria "Total":** `nivel_instrucao == "Total"` é a soma dos demais níveis
+  de instrução — gera os 8 `is_outlier == True` deste dataset (estrutural, não
+  erro de dado — ver seção 12 do relatório final). Excluir com
+  `nivel_instrucao != "Total"` em análises que somem níveis individualmente.
