@@ -5,3 +5,4 @@ openpyxl
 python-dotenv
 plotly>=5.0
 nbformat>=4.2.0
+streamlit>=1.38

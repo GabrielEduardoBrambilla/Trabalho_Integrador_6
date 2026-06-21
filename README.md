@@ -25,6 +25,9 @@ mensal_3/
 │   ├── bronze/                # JSON bruto da API SIDRA (preservado, versionado)
 │   ├── silver/                # pnad_limpo.csv (normalizado)
 │   └── gold/                  # pnad_treated_data.csv (principal) + pnad_context_data.csv (contexto)
+├── dashboard/                  # Dashboard Streamlit (extensão de BI, não obrigatória no PM3)
+│   ├── app.py                  # Capa + pages/ — investigação narrativa do gap salarial
+│   └── docs/                   # storytelling.md + analise_graficos.md
 ├── docs/
 │   ├── plano_pm3.md                    # Checklist original do PM3 (context.md 6.1-6.17)
 │   ├── plano_refoco_gap_salarial.md    # Plano da mudança de foco + split em 2 gold outputs
@@ -53,6 +56,11 @@ mensal_3/
 > No Windows, execute o notebook com a variável de ambiente `PYTHONUTF8=1` definida
 > (`locale.getpreferredencoding()` neste tipo de ambiente costuma retornar `cp1252`,
 > o que corrompe acentuação ao salvar o `.ipynb` via `jupyter execute`).
+
+4. **Dashboard (opcional):** `streamlit run dashboard/app.py` — consome os dois
+   datasets finais para uma investigação visual guiada do gap salarial. Ver
+   [`dashboard/README.md`](dashboard/README.md) e
+   [`dashboard/docs/storytelling.md`](dashboard/docs/storytelling.md).
 
 Pré-requisitos: Python 3.12+, dependências em `requirements.txt`
 (`pip install -r requirements.txt`).
