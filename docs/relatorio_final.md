@@ -1,9 +1,6 @@
 # Relatório Final — PM3: Tratamento de Dados do Mercado de Trabalho na Região Sul (PNAD Contínua/IBGE)
 
-> Estrutura conforme `docs/context.md` (seção 8, 23 itens). Todos os números,
-> tabelas e gráficos citados estão implementados e executados em
-> `notebooks/03_tratamento_pm3.ipynb`; as seções abaixo indicam onde encontrar
-> cada item no notebook.
+> Estrutura conforme `docs/context.md` (seção 8, 23 itens). Todos os números, tabelas e gráficos citados estão implementados e executados em `notebooks/03_tratamento_pm3.ipynb`; as seções abaixo indicam onde encontrar cada item no notebook.
 
 ## 1. Introdução
 
@@ -58,17 +55,17 @@ Análise feita a partir do **bronze** (JSON bruto retornado pela API SIDRA), ant
 
 Tabela-resumo dos 9 problemas identificados:
 
-| #   | Problema                                                                                                                | Exemplo                                                               |
-| --- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| 1   | Linha 0 do JSON SIDRA = cabeçalho de metadados misturado aos dados                                                      | Primeira linha de cada `pnad_*.json`                                  |
-| 2   | Códigos numéricos vs. nomes redundantes                                                                                 | `D1C="41"` / `D1N="Paraná"`, `D4C="4"` / `D4N="Homens"`               |
-| 3   | `Trimestre`/`Ano` (`D2C`) como código de texto, não como data                                                           | `"202001"` (4093/5436) vs. `"2021"` (7322)                            |
-| 4   | Valores ausentes codificados pelo IBGE                                                                                  | `-`, `...`, `X`, `x`, `C`, `""`                                       |
-| 5   | **(Principal)** Dimensão "Variável" (D3) empilha dezenas de indicadores com unidades diferentes na mesma coluna `valor` | 4093 tem 34 variáveis (Mil pessoas, %, coef. variação)                |
-| 6   | Mistura de unidades entre `tabela_id`                                                                                   | 4093 = pessoas/%, 5436 = R$                                           |
-| 7   | Recorte etário inconsistente entre tabelas                                                                              | 4093/5436 = 14+ anos; 7322 = 10+ anos                                 |
-| 8   | Tabela 7322 coletada em nível geográfico diferente (N2/Região, não N3/UF)                                               | 7322 tem `regiao_cod`/`regiao_nome`; 4093/5436 têm `uf_cod`/`uf_nome` |
-| 9   | Trimestres inteiros ausentes na resposta da API (tabela 5436)                                                           | Faltam 2020T2 a 2022T1 (linhas inteiras, não `"..."`)                 |
+| # | Problema                                                                                                                          | Exemplo                                                                        |
+| - | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| 1 | Linha 0 do JSON SIDRA = cabeçalho de metadados misturado aos dados                                                               | Primeira linha de cada `pnad_*.json`                                         |
+| 2 | Códigos numéricos vs. nomes redundantes                                                                                         | `D1C="41"` / `D1N="Paraná"`, `D4C="4"` / `D4N="Homens"`               |
+| 3 | `Trimestre`/`Ano` (`D2C`) como código de texto, não como data                                                             | `"202001"` (4093/5436) vs. `"2021"` (7322)                                 |
+| 4 | Valores ausentes codificados pelo IBGE                                                                                            | `-`, `...`, `X`, `x`, `C`, `""`                                    |
+| 5 | **(Principal)** Dimensão "Variável" (D3) empilha dezenas de indicadores com unidades diferentes na mesma coluna `valor` | 4093 tem 34 variáveis (Mil pessoas, %, coef. variação)                      |
+| 6 | Mistura de unidades entre `tabela_id`                                                                                           | 4093 = pessoas/%, 5436 = R$                                                    |
+| 7 | Recorte etário inconsistente entre tabelas                                                                                       | 4093/5436 = 14+ anos; 7322 = 10+ anos                                          |
+| 8 | Tabela 7322 coletada em nível geográfico diferente (N2/Região, não N3/UF)                                                     | 7322 tem `regiao_cod`/`regiao_nome`; 4093/5436 têm `uf_cod`/`uf_nome` |
+| 9 | Trimestres inteiros ausentes na resposta da API (tabela 5436)                                                                     | Faltam 2020T2 a 2022T1 (linhas inteiras, não `"..."`)                       |
 
 **Problema 1 — cabeçalho de metadados na linha 0.** A API SIDRA retorna a linha 0 com as _descrições_ das colunas (`D1C`/`D1N`, `D2C`/`D2N`, ..., `MC`/`MN`, `V`), e a partir da linha 1 os dados propriamente ditos — usando os mesmos nomes de chave. Se essa linha 0 não for descartada e usada apenas para mapear os nomes das colunas, ela aparece como um registro inválido no dataset (todas as colunas como texto descritivo). O `PnadNormalizer` já trata isso: usa `dados[0]` apenas para construir `_build_col_map` e descarta a linha do dataframe final.
 

@@ -18,6 +18,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
 ## Aba "Mercado de Trabalho"
 
 ### 1. Rendimento médio por sexo e UF (gráfico borboleta)
+
 - **Tipo:** `go.Bar` duplo horizontal, feminino em valores negativos a partir
   de um eixo central compartilhado.
 - **Leitura:** Feminino ≈ R$ 2.984–3.198 / Masculino ≈ R$ 3.997–4.182, conforme
@@ -27,12 +28,14 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
   a distância entre as pontas já é a leitura.
 
 ### 2. Gap salarial médio por UF (barras horizontais)
+
 - **Tipo:** `go.Bar` horizontal, cor por UF (paleta fixa de `theme.py`).
 - **Leitura:** Paraná ≈34%, Rio Grande do Sul ≈31%, Santa Catarina ≈31%.
 - **Por que esse tipo:** ranking simples de 3 categorias — barra horizontal é
   o gráfico mais direto para isso, sem necessidade de eixo polar ou áreas.
 
 ### 3. Evolução trimestral do gap salarial (linha)
+
 - **Tipo:** `px.line`, uma série por UF, com `add_vrect` marcando a lacuna de
   dados (2020T2–2022T1).
 - **Leitura:** o gap oscila entre ~26% e ~39% nos 16 trimestres com dado
@@ -43,6 +46,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
   evolui"; a anotação contextualiza um padrão que, sem ela, pareceria um bug.
 
 ### 4. Distribuição do rendimento por UF e sexo (boxplot)
+
 - **Tipo:** `px.box`.
 - **Leitura:** as caixas femininas ficam quase inteiramente abaixo das
   masculinas, com pouca sobreposição — o gap não é puxado por outliers, é uma
@@ -55,16 +59,16 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
 ## Aba "Investigação"
 
 ### 5. Correlação entre indicadores (heatmap)
+
 - **Tipo:** `px.imshow` sobre matriz de correlação de Pearson.
 - **Dados:** Ocupação, Informalidade e Rendimento, pivotados por
   UF/trimestre/sexo (`build_indicator_wide`).
-- **Leitura:** Ocupação×Informalidade ≈0,86–0,88 (forte); Rendimento×Ocupação
-  ≈0,49; Rendimento×Informalidade ≈0,07 (quase nula). O rendimento é o
-  indicador mais independente dos outros dois.
+- **Leitura:** Ocupação×Informalidade ≈0,86–0,88 (forte); Rendimento×Ocupação ≈0,49; Rendimento×Informalidade ≈0,07 (quase nula). O endimento é o indicador mais independente dos outros dois.
 - **Por que esse tipo:** compara todos os pares de variáveis de uma vez, sem
   precisar de 3 scatters separados.
 
 ### 6. Perfil normalizado por sexo (radar)
+
 - **Tipo:** `go.Scatterpolar`, duas séries preenchidas, 3 eixos.
 - **Dados:** `valor_normalizado` médio por indicador × sexo: Ocupação F=0,38 /
   M=0,73; Informalidade F=0,51 / M=0,69; Rendimento F=0,21 / M=0,70.
@@ -73,7 +77,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
   se ocupação/informalidade explicassem o gap salarial, os três afastamentos
   seriam parecidos; não são.
 - **Por que radar, e não 3 gráficos de barra:** é o único formato que mostra a
-  *forma* do perfil de cada sexo nos três indicadores simultaneamente — e
+  _forma_ do perfil de cada sexo nos três indicadores simultaneamente — e
   permite ver se a diferença é proporcional (polígonos de mesma forma) ou
   não (polígonos de forma diferente, como aqui).
 - **Cuidado de leitura:** o eixo "Ocupação" usa uma contagem absoluta de
@@ -81,6 +85,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
   não participação relativa.
 
 ### 7. Rendimento × Informalidade × Ocupação por trimestre (bolhas animadas)
+
 - **Tipo:** `px.scatter` com `animation_frame="periodo_label"`,
   `facet_col="uf_nome"`, tamanho = pessoas ocupadas.
 - **Leitura:** ao animar, os pontos femininos (rosa) permanecem à esquerda dos
@@ -98,6 +103,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
 > Sul, anual, não cruzado por UF/trimestre com o dataset principal.
 
 ### 8. Distribuição educacional por sexo (radar)
+
 - **Tipo:** `go.Scatterpolar`, 7 eixos (um por nível de instrução, exceto
   "Total").
 - **Dados:** % da população de cada sexo em cada nível (soma 100% por sexo).
@@ -111,6 +117,7 @@ números que um usuário apressado precisa ver antes de abrir qualquer gráfico.
   de nova legenda.
 
 ### 9. População por nível de instrução (barras agrupadas)
+
 - **Tipo:** `px.bar(barmode="group")`.
 - **Leitura:** valores absolutos (mil pessoas) por nível × sexo — complementa
   o radar (que mostra só proporção) com a escala real da população.

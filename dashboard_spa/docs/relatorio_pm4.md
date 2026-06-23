@@ -1,6 +1,6 @@
 # Relatório Final — PM4: Visualização de Dados e Dashboard (Gap Salarial, Região Sul)
 
-> Dashboard implementado em `dashboard_spa/app.py`; racional de cada gráfico em `dashboard_spa/docs/analise_graficos.md`; decisões de design em `dashboard_spa/docs/storytelling.md`. Este relatório referencia os dois sem repetir o conteúdo integralmente.
+> Dashboard implementado em [link](https://gabrieleduardobrambilla-trabalho-integ-dashboard-spaapp-86prob.streamlit.app/);
 
 ## 1. Introdução
 
@@ -21,7 +21,7 @@ Catálogos completos em `docs/catalogo_dados.md` e `docs/catalogo_dados_contexto
 
 ## 4. Relação com o PM3
 
-O PM3 entregou exatamente o que o PM4 exige como ponto de partida (seção 3 de `docs/gold_context.md`): uma base real, tratada, que permite análise por categorias (UF, sexo, nível de instrução), análise de valores numéricos (rendimento, taxa de informalidade), e já estruturada para criação de indicadores e gráficos — incluindo uma feature derivada própria para este fim, `gap_salarial_pct` (PM3, seção 17). O PM4 não exigiu nem motivou nenhuma mudança nos dados; o dashboard lê os CSVs do PM3 como estão.
+O PM3 entregou exatamente o que o PM4 exige como ponto de partida: uma base real, tratada, que permite análise por categorias (UF, sexo, nível de instrução), análise de valores numéricos (rendimento, taxa de informalidade), e já estruturada para criação de indicadores e gráficos — incluindo uma feature derivada própria para este fim, `gap_salarial_pct` (PM3, seção 17). O PM4 não exigiu nem motivou nenhuma mudança nos dados; o dashboard lê os CSVs do PM3 como estão.
 
 ## 5. Objetivo da análise
 
@@ -30,9 +30,13 @@ Construir um dashboard que responda, com indicadores e gráficos — não com te
 ## 6. Perguntas analíticas
 
 1. **Qual o tamanho do gap salarial entre homens e mulheres, e como ele varia entre Paraná, Santa Catarina e Rio Grande do Sul?**
+   **Resposta:** o gap médio é de 32,1% (rendimento masculino R$ 4.065 vs. feminino R$ 3.080), e ele é alto nas três UFs, sem nenhum estado onde o gap seja pequeno: Paraná ≈34%, Rio Grande do Sul ≈31% e Santa Catarina ≈31%. A variação entre estados é pequena (3 p.p.) comparada ao tamanho do gap em si — não há UF "exceção" (gráficos 1 e 2, `dashboard_spa/docs/analise_graficos.md`).
 2. **O gap salarial está diminuindo, aumentando ou estável entre 2020 e 2025?**
+   **Resposta:** estável, sem tendência de queda. O gap trimestral oscila entre ~26% e ~39% ao longo dos 16 trimestres com dado disponível (2020–2025), mas não há trajetória consistente de redução nem de aumento — apenas ruído em torno de um nível persistentemente alto (gráfico 3).
 3. **Diferenças de ocupação ou de informalidade entre os sexos explicam o gap salarial?**
+   **Resposta:** não. Ocupação e informalidade têm correlação forte entre si (0,88), mas o rendimento é o indicador mais independente dos dois (correlação ≈0,49 com ocupação e ≈0,07 com informalidade). O radar de perfil normalizado (gráfico 6) mostra que o afastamento entre os sexos é desproporcionalmente maior no eixo Rendimento do que nos eixos Ocupação e Informalidade — se essas duas variáveis explicassem o gap salarial, os três afastamentos seriam proporcionalmente parecidos, e não são (gráficos 5–7).
 4. **Mulheres têm menos escolaridade que homens — o que justificaria um rendimento menor?**
+   **Resposta:** o oposto é verdadeiro. Mulheres têm proporcionalmente mais "Superior completo" que homens (19,0% vs. 14,6%, +4,4 p.p.) — exatamente o nível de instrução mais associado a remunerações mais altas. Essa diferença de escolaridade não apenas não explica o gap salarial como vai na direção contrária dele (gráficos 8–9).
 
 (mínimo exigido: 3 — apresentadas 4, cada uma respondida por pelo menos um gráfico do dashboard, ver seção 8).
 
@@ -87,29 +91,27 @@ Todas as 9 visualizações da seção 8 foram construídas no dashboard (`dashbo
 
 ## 12. Conclusão
 
-O dashboard do PM4 cumpre integralmente os requisitos de `docs/gold_context.md` (checklist na seção 13) e responde, com evidência visual e indicadores recalculáveis por filtro, às 4 perguntas analíticas propostas: o gap salarial de 32,1% entre homens e mulheres na Região Sul é real, persistente ao longo do tempo e nas três UFs, e não é explicado por ocupação, informalidade ou escolaridade — pelo contrário, a escolaridade favorece as mulheres. O dashboard está pronto para uso recorrente por gestores públicos, sindicatos e pesquisadores (público identificado em `docs/relatorio_final.md`, seção 2).
+O dashboard do PM4 cumpre integralmente os e responde 4 perguntas analíticas propostas: o gap salarial de 32,1% entre homens e mulheres na Região Sul é real, persistente ao longo do tempo e nas três UFs, e não é explicado por ocupação, informalidade ou escolaridade — pelo contrário, a escolaridade favorece as mulheres. O dashboard está pronto para uso recorrente por gestores públicos, sindicatos e pesquisadores (público identificado em `docs/relatorio_final.md`, seção 2).
 
 ## 13. Checklist de conformidade com `docs/gold_context.md`
 
-| Requisito (seção do gold_context.md)                  | Exigido                                             | Entregue                      | Onde                                                                                |
-| ----------------------------------------------------- | --------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------- |
-| Tema, problema, quem usa (6.1/Etapa 1)                | texto                                               | ✅                            | Seções 2, 5 deste relatório                                                         |
-| Perguntas analíticas (Etapa 1)                        | ≥ 3                                                 | ✅ 4                          | Seção 6                                                                             |
-| Indicadores utilizados (Etapa 1)                      | citar                                               | ✅ 5                          | Seção 7                                                                             |
-| Gráficos planejados (Etapa 2)                         | ≥ 4, com título/tipo/colunas/pergunta/justificativa | ✅ 9                          | Seção 8                                                                             |
-| Visualizações finais com interpretação (Etapa 3)      | ≥ 4                                                 | ✅ 9                          | Seções 9–10,`analise_graficos.md`                                                   |
-| Indicadores principais no dashboard (Etapa 4)         | ≥ 3                                                 | ✅ 5 (+3 na aba Escolaridade) | `dashboard_spa/app.py`, KPI strip                                                   |
-| Gráficos no dashboard (Etapa 4)                       | ≥ 4                                                 | ✅ 9                          | `dashboard_spa/app.py`, 3 abas                                                      |
-| Filtro interativo (Etapa 4)                           | ≥ 1                                                 | ✅ 2 (UF, período)            | Sidebar,`dashboard_spa/app.py`                                                      |
-| Título do dashboard (Etapa 4)                         | sim                                                 | ✅                            | `st.title`                                                                          |
-| Fonte dos dados no dashboard (Etapa 4)                | sim                                                 | ✅                            | `st.caption` sob o título + sidebar                                                 |
-| Organização visual clara (Etapa 4)                    | sim                                                 | ✅                            | Sidebar + KPI strip + abas                                                          |
-| Base utilizada (Entregável 1)                         | sim                                                 | ✅                            | `dados/gold/pnad_treated_data.csv` + `pnad_context_data.csv`                        |
-| Briefing da visualização (Entregável 2)               | sim                                                 | ✅                            | Seções 2, 5, 6, 7 deste relatório                                                   |
-| Planejamento de gráficos (Entregável 4)               | ≥ 4                                                 | ✅ 9                          | Seção 8                                                                             |
-| Visualizações finais com interpretação (Entregável 5) | ≥ 4                                                 | ✅ 9                          | Seções 9–10                                                                         |
-| Dashboard final (Entregável 6)                        | sim                                                 | ✅                            | `dashboard_spa/app.py`, `streamlit run dashboard_spa/app.py`                        |
-| Prints ou link do dashboard (Entregável 7)            | sim                                                 | ⏳                            | A capturar antes da entrega — dashboard em execução local (`http://localhost:8765`) |
-| Relatório final (Entregável 8)                        | sim                                                 | ✅                            | Este documento                                                                      |
-
-> O único item pendente é o **print/link** (Entregável 7) — depende de captura manual no momento da entrega, ou de publicação do app (ex.: Streamlit Community Cloud), o que está fora do escopo de tratamento/análise de dados.
+| Requisito (seção do gold_context.md)                  | Exigido                                             | Entregue                      | Onde                                                                                  |
+| ----------------------------------------------------- | --------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------- |
+| Tema, problema, quem usa (6.1/Etapa 1)                | texto                                               | ✅                            | Seções 2, 5 deste relatório                                                           |
+| Perguntas analíticas (Etapa 1)                        | ≥ 3                                                 | ✅ 4                          | Seção 6                                                                               |
+| Indicadores utilizados (Etapa 1)                      | citar                                               | ✅ 5                          | Seção 7                                                                               |
+| Gráficos planejados (Etapa 2)                         | ≥ 4, com título/tipo/colunas/pergunta/justificativa | ✅ 9                          | Seção 8                                                                               |
+| Visualizações finais com interpretação (Etapa 3)      | ≥ 4                                                 | ✅ 9                          | Seções 9–10,`analise_graficos.md`                                                     |
+| Indicadores principais no dashboard (Etapa 4)         | ≥ 3                                                 | ✅ 5 (+3 na aba Escolaridade) | `dashboard_spa/app.py`, KPI strip                                                     |
+| Gráficos no dashboard (Etapa 4)                       | ≥ 4                                                 | ✅ 9                          | `dashboard_spa/app.py`, 3 abas                                                        |
+| Filtro interativo (Etapa 4)                           | ≥ 1                                                 | ✅ 2 (UF, período)            | Sidebar,`dashboard_spa/app.py`                                                        |
+| Título do dashboard (Etapa 4)                         | sim                                                 | ✅                            | `st.title`                                                                            |
+| Fonte dos dados no dashboard (Etapa 4)                | sim                                                 | ✅                            | `st.caption` sob o título + sidebar                                                   |
+| Organização visual clara (Etapa 4)                    | sim                                                 | ✅                            | Sidebar + KPI strip + abas                                                            |
+| Base utilizada (Entregável 1)                         | sim                                                 | ✅                            | `dados/gold/pnad_treated_data.csv` + `pnad_context_data.csv`                          |
+| Briefing da visualização (Entregável 2)               | sim                                                 | ✅                            | Seções 2, 5, 6, 7 deste relatório                                                     |
+| Planejamento de gráficos (Entregável 4)               | ≥ 4                                                 | ✅ 9                          | Seção 8                                                                               |
+| Visualizações finais com interpretação (Entregável 5) | ≥ 4                                                 | ✅ 9                          | Seções 9–10                                                                           |
+| Dashboard final (Entregável 6)                        | sim                                                 | ✅                            | `dashboard_spa/app.py`, `streamlit run dashboard_spa/app.py`                          |
+| Prints ou link do dashboard (Entregável 7)            | sim                                                 | ✅                            | https://gabrieleduardobrambilla-trabalho-integ-dashboard-spaapp-86prob.streamlit.app/ |
+| Relatório final (Entregável 8)                        | sim                                                 | ✅                            | Este documento                                                                        |

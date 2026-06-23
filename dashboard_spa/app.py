@@ -152,6 +152,13 @@ with tab_mercado:
         annotation_text="Mediana geral", annotation_position="top left",
     )
     st.plotly_chart(style(fig, height=340), width="stretch")
+    st.caption(
+        "A tabela 5436 do SIDRA/IBGE já é o rendimento médio mensal real calculado "
+        "pelo IBGE por sexo/UF/trimestre, e não os rendimentos individuais dos "
+        "respondentes da PNAD Contínua — cada ponto do boxplot é uma média sobre "
+        "milhares de pessoas entrevistadas naquele trimestre/UF/sexo, por isso não "
+        "há outliers individuais."
+    )
 
 # --------------------------------------------------------------------------- #
 # Tab 2 — Investigação
